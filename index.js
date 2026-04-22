@@ -76,8 +76,11 @@ function getSenderName(body) {
     body?.source?.displayName,
     body?.source?.userName,
     body?.source?.name,
+    body?.source?.accountName,
+    body?.source?.nickname,
     body?.user?.displayName,
     body?.user?.name,
+    body?.user?.userName,
     body?.displayName,
     body?.name
   ];
@@ -210,7 +213,7 @@ async function urlAlreadyExists(sheetName, url) {
 
   const res = await sheets.spreadsheets.values.get({
     spreadsheetId: SPREADSHEET_ID,
-    range: `${sheetName}!I:I`
+    range: `${sheetName}!H:H`
   });
 
   const values = res.data.values || [];
@@ -428,19 +431,17 @@ app.post("/", async (req, res) => {
 
       const place = await resolveGoogleMapsPlace(mapUrl);
 
-      // A〜J列で追加
-      // E:投稿者名 F:施設名称 H:住所 I:URL J:プラスコード
       await appendToSheet(TARGET_SHEET_NAME, [
         "",                          // A
         "",                          // B
         "",                          // C
-        "",                          // D
-        senderName || "",            // E
-        place.name || "",            // F
-        "",                          // G
-        place.address || "",         // H
-        mapUrl,                      // I
-        place.address ? "" : (place.plusCode || "") // J
+        senderName || "",            // D
+        place.name || "",            // E
+        "",                          // F
+        place.address || "",         // G
+        mapUrl,                      // H
+        place.address ? "" : (place.plusCode || ""), // I
+        ""                           // J
       ]);
     }
 
