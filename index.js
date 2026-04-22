@@ -160,12 +160,13 @@ function cleanupMapsText(s) {
 }
 
 function extractPlaceIdFromText(text) {
+  // query parameter に place_id がある場合だけ Place ID とみなす
   let m = text.match(/(?:place_id|query_place_id)=([^&#]+)/i);
   if (m) return decodeSafe(m[1]);
 
-  m = text.match(/\/place\/.*?\/data=.*?1s([^!&?/]+)/i);
-  if (m) return decodeSafe(m[1]);
-
+  // /data=...1s の後ろに 0x...:0x... が来ることがあるが、
+  // これは Places API (New) の Place Details にそのまま渡せる
+  // Place ID ではないケースがあるため使わない
   return "";
 }
 
@@ -335,13 +336,17 @@ async function resolveGoogleMapsPlace(originalUrl) {
     extractPlaceIdFromText(decodedUrl);
 
   if (placeId) {
-    const detail = await getPlaceDetailsByPlaceId(placeId);
-    return {
-      name: detail.name || "",
-      address: detail.address || "",
-      plusCode: detail.plusCode || "",
-      url: originalUrl
-    };
+    try {
+      const detail = await getPlaceDetailsByPlaceId(placeId);
+      return {
+        name: detail.name || "",
+        address: detail.address || "",
+        plusCode: detail.plusCode || "",
+        url: originalUrl
+      };
+    } catch (err) {
+      console.warn("Place Details fallback:", String(err));
+    }
   }
 
   const query =
