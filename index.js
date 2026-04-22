@@ -184,7 +184,7 @@ function extractLatLng(text) {
 }
 
 // ---------- Google Sheets ----------
-async function appendToSheet(sheetName, rowValues) {
+async function Sheet(sheetName, rowValues) {
   const auth = new google.auth.GoogleAuth({
     scopes: ["https://www.googleapis.com/auth/spreadsheets"]
   });
@@ -432,8 +432,8 @@ app.post("/", async (req, res) => {
       const place = await resolveGoogleMapsPlace(mapUrl);
 
       await appendToSheet(TARGET_SHEET_NAME, [
-        "",                          // A
-        "",                          // B
+        new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }),                          // A
+        "", // B
         "",                          // C
         senderName || "",            // D
         place.name || "",            // E
