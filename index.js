@@ -403,10 +403,28 @@ app.post("/", async (req, res) => {
   const urls = extractUrls(text);
   const mapUrls = urls.filter(isGoogleMapsUrl);
 
+function formatTokyoDateTime(date = new Date()) {
+  const formatter = new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    month: "2-digit",
+    day: "2-digit",
+  });
+
+  const parts = formatter.formatToParts(date);
+  const map = {};
+  for (const part of parts) {
+    if (part.type !== "literal") {
+      map[part.type] = part.value;
+    }
+  }
+
+  return `${map.month}/${map.day}`;
+}
+  
   try {
     // debugシートへ記録
     await appendToSheet(DEBUG_SHEET_NAME, [
-      new Date().toISOString(),
+      new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }),
       eventType,
       text,
       senderName,
@@ -451,7 +469,7 @@ app.post("/", async (req, res) => {
 
     try {
       await appendToSheet(DEBUG_SHEET_NAME, [
-        new Date().toISOString(),
+        new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }),
         "ERROR",
         "",
         senderName,
