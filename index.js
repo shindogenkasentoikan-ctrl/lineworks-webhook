@@ -48,23 +48,6 @@ function getMessageText(body) {
   return "";
 }
 
-function formatTokyoDateTime(date = new Date()) {
-  const formatter = new Intl.DateTimeFormat("ja-JP", {
-    timeZone: "Asia/Tokyo",
-    month: "2-digit",
-    day: "2-digit",
-  });
-
-  const parts = formatter.formatToParts(date);
-  const map = {};
-  for (const part of parts) {
-    if (part.type !== "literal") {
-      map[part.type] = part.value;
-    }
-  }
-
-  return `${map.month}/${map.day}`;
-}
 
 function getEventType(body) {
   return body?.type || "";
