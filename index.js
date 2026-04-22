@@ -132,13 +132,13 @@ app.post("/", async (req, res) => {
       rawBody
     ]);
 
-    if (eventType === "message" && text) {
-      if (roomId) {
-        await sendToRoom(roomId, text);
-      } else if (accountId) {
-        await sendToUser(accountId, text);
-      }
-    }
+// if (eventType === "message" && text) {
+//   if (roomId) {
+//     await sendToRoom(roomId, text);
+//   } else if (accountId) {
+//     await sendToUser(accountId, text);
+//   }
+// }
 
     res.status(200).json({ ok: true });
   } catch (err) {
