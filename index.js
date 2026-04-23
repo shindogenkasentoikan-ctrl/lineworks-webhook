@@ -438,12 +438,12 @@ app.post("/", async (req, res) => {
         new Date().toISOString(), // B
         "", // C
         senderName || "", // D
-        "", // E
-        place.name || "", // F
-        "", // G
-        place.address || "", // H
-        mapUrl, // I
-        place.address ? "" : (place.plusCode || "") // J
+        place.name || "", // E
+        "", // F
+        place.address || "", // G
+        mapUrl, // H
+        place.address ? "" : (place.plusCode || "") // I
+        "", // J
         ]);
     }
 
