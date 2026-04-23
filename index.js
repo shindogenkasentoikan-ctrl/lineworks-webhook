@@ -188,11 +188,18 @@ function extractLatLng(text) {
 function getJapanMonthDay() {
   const now = new Date();
 
-  const jst = new Date(
-    now.toLocaleString("en-US", { timeZone: "Asia/Tokyo" })
-  );
+  const formatter = new Intl.DateTimeFormat("ja-JP", {
+    timeZone: "Asia/Tokyo",
+    month: "numeric",
+    day: "numeric"
+  });
 
-  return `${jst.getMonth() + 1}/${jst.getDate()}`;
+  const parts = formatter.formatToParts(now);
+
+  const month = parts.find(p => p.type === "month").value;
+  const day = parts.find(p => p.type === "day").value;
+
+  return `${month}/${day}`;
 }
 
 // ---------- Google Sheets ----------
