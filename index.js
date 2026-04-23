@@ -432,10 +432,12 @@ app.post("/", async (req, res) => {
       }
 
       const place = await resolveGoogleMapsPlace(mapUrl);
+      const now = new Date();
+      const dateStr = `${now.getMonth() + 1}/${now.getDate()}`;
 
       await appendToSheet(TARGET_SHEET_NAME, [
         "", // A
-        new Date().toISOString(), // B
+        dateStr, // B
         "", // C
         "", // D
         place.name || "", // E
