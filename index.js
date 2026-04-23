@@ -437,7 +437,7 @@ app.post("/", async (req, res) => {
         "", // A
         new Date().toISOString(), // B
         "", // C
-        senderName || "", // D
+        "", // D
         place.name || "", // E
         "", // F
         place.address || "", // G
