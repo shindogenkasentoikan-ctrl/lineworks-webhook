@@ -442,7 +442,7 @@ app.post("/", async (req, res) => {
         "", // F
         place.address || "", // G
         mapUrl, // H
-        place.address ? "" : (place.plusCode || "") // I
+        place.address ? "" : (place.plusCode || ""), // I
         "", // J
         ]);
     }
