@@ -408,7 +408,7 @@ app.post("/", async (req, res) => {
   try {
     // debugシートへ記録
     await appendToSheet(DEBUG_SHEET_NAME, [
-      new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }),
+      new Date().toISOString(),
       eventType,
       text,
       senderName,
@@ -434,17 +434,17 @@ app.post("/", async (req, res) => {
       const place = await resolveGoogleMapsPlace(mapUrl);
 
       await appendToSheet(TARGET_SHEET_NAME, [
-  "", // A
-  new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }), // B
-  "", // C
-  senderName || "", // D
-  "", // E
-  place.name || "", // F
-  "", // G
-  place.address || "", // H
-  mapUrl, // I
-  place.address ? "" : (place.plusCode || "") // J
-]);
+        "", // A
+        new Date().toISOString(), // B
+        "", // C
+        senderName || "", // D
+        "", // E
+        place.name || "", // F
+        "", // G
+        place.address || "", // H
+        mapUrl, // I
+        place.address ? "" : (place.plusCode || "") // J
+        ]);
     }
 
     return res.status(200).json({ ok: true });
@@ -453,7 +453,7 @@ app.post("/", async (req, res) => {
 
     try {
       await appendToSheet(DEBUG_SHEET_NAME, [
-        new Date().toLocaleString("ja-JP", { timeZone: "Asia/Tokyo" }),
+        new Date().toISOString(),
         "ERROR",
         "",
         senderName,
