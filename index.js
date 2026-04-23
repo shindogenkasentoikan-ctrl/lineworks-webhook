@@ -184,6 +184,17 @@ function extractLatLng(text) {
   return null;
 }
 
+// ★ここに追加★
+function getJapanMonthDay() {
+  const now = new Date();
+
+  const jst = new Date(
+    now.toLocaleString("en-US", { timeZone: "Asia/Tokyo" })
+  );
+
+  return `${jst.getMonth() + 1}/${jst.getDate()}`;
+}
+
 // ---------- Google Sheets ----------
 async function appendToSheet(sheetName, rowValues) {
   const auth = new google.auth.GoogleAuth({
@@ -437,7 +448,7 @@ app.post("/", async (req, res) => {
 
       await appendToSheet(TARGET_SHEET_NAME, [
         "", // A
-        dateStr, // B
+        getJapanMonthDay(), // B
         "", // C
         "", // D
         place.name || "", // E
