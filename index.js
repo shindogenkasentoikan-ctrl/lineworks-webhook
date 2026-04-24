@@ -461,12 +461,13 @@ app.post("/", async (req, res) => {
         getJapanMonthDay(), // B
         "", // C
         senderName || "", // D
-        place.name || "", // E
-        "", // F
-        place.address || "", // G
-        mapUrl, // H
-        place.address ? "" : (place.plusCode || ""), // I
-        "", // J
+        "", // E
+        place.name || "", // F
+        "", // G
+        place.address || "", // H
+        mapUrl, // I
+        place.address ? "" : (place.plusCode || ""), // J
+        "", // K
         ]);
     }
 
