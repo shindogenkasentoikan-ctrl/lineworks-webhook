@@ -104,6 +104,30 @@ function extractUrls(text) {
   return text.match(re) || [];
 }
 
+async function getSenderNameFromSheet(accountId) {
+  if (!accountId) return "";
+
+  const auth = new google.auth.GoogleAuth({
+    scopes: ["https://www.googleapis.com/auth/spreadsheets.readonly"]
+  });
+
+  const sheets = google.sheets({ version: "v4", auth });
+
+  const res = await sheets.spreadsheets.values.get({
+    spreadsheetId: SPREADSHEET_ID,
+    range: `メンバー対応表!A:B`
+  });
+
+  const rows = res.data.values || [];
+  for (const row of rows) {
+    if ((row[0] || "").trim() === accountId) {
+      return (row[1] || "").trim();
+    }
+  }
+
+  return accountId;
+}
+
 function isGoogleMapsUrl(url) {
   return /(^https?:\/\/)?(www\.)?(maps\.app\.goo\.gl|goo\.gl\/maps|google\.[^\/]+\/maps|maps\.google\.[^\/]+)/i.test(
     url
@@ -421,7 +445,7 @@ app.post("/", async (req, res) => {
   const text = getMessageText(body);
   const accountId = getAccountId(body);
   const roomId = getRoomId(body);
-  const senderName = accountId;
+  const senderName = await getSenderNameFromSheet(accountId);
   const urls = extractUrls(text);
   const mapUrls = urls.filter(isGoogleMapsUrl);
 
@@ -461,7 +485,7 @@ app.post("/", async (req, res) => {
         getJapanMonthDay(), // B
         "", // C
         senderName || "", // D
-        "", // E
+        accountId || "", // E
         place.name || "", // F
         "", // G
         place.address || "", // H
