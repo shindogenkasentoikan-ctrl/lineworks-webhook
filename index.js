@@ -57,7 +57,10 @@ function getAccountId(body) {
   return (
     body?.source?.accountId ||
     body?.source?.userId ||
+    body?.source?.senderId ||
     body?.accountId ||
+    body?.userId ||
+    body?.senderId ||
     ""
   );
 }
