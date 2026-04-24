@@ -418,7 +418,7 @@ app.post("/", async (req, res) => {
   const text = getMessageText(body);
   const accountId = getAccountId(body);
   const roomId = getRoomId(body);
-  const senderName = getSenderName(body);
+  const senderName = accountId;
   const urls = extractUrls(text);
   const mapUrls = urls.filter(isGoogleMapsUrl);
 
@@ -457,7 +457,7 @@ app.post("/", async (req, res) => {
         "", // A
         getJapanMonthDay(), // B
         "", // C
-        "", // D
+        senderName || "", // D
         place.name || "", // E
         "", // F
         place.address || "", // G
