@@ -404,24 +404,49 @@ async function resolveGoogleMapsPlace(originalUrl) {
     extractLikelyQueryFromMapsUrl(decodedUrl);
 
   if (query) {
-    const searched = await searchPlaceByText(query);
-    return {
-      name: searched.name || "",
-      address: searched.address || "",
-      plusCode: searched.plusCode || "",
-      url: originalUrl
-    };
+    if (isCoordinateQuery(query)) {
+      const coord = parseCoordinateQuery(query);
+      if (coord) {
+        try {
+          const geo = await reverseGeocode(coord.lat, coord.lng);
+          return {
+            name: geo.name || "",
+            address: geo.address || "",
+            plusCode: geo.plusCode || "",
+            url: originalUrl
+          };
+        } catch (err) {
+          console.warn("Reverse Geocoding from query failed:", String(err));
+        }
+      }
+    }
+
+    try {
+      const searched = await searchPlaceByText(query);
+      return {
+        name: searched.name || "",
+        address: searched.address || "",
+        plusCode: searched.plusCode || "",
+        url: originalUrl
+      };
+    } catch (err) {
+      console.warn("Text Search failed, fallback to latlng:", String(err));
+    }
   }
 
   const latlng = extractLatLng(decodedUrl);
   if (latlng) {
-    const geo = await reverseGeocode(latlng.lat, latlng.lng);
-    return {
-      name: geo.name || "",
-      address: geo.address || "",
-      plusCode: geo.plusCode || "",
-      url: originalUrl
-    };
+    try {
+      const geo = await reverseGeocode(latlng.lat, latlng.lng);
+      return {
+        name: geo.name || "",
+        address: geo.address || "",
+        plusCode: geo.plusCode || "",
+        url: originalUrl
+      };
+    } catch (err) {
+      console.warn("Reverse Geocoding failed:", String(err));
+    }
   }
 
   return {
